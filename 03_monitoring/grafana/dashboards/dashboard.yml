@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: 'WAL-G Dashboards'
+    orgId: 1
+    folder: 'WAL-G'
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /etc/grafana/provisioning/dashboards

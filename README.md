@@ -21,6 +21,12 @@ This lab is split into two independent examples located in their respective subd
    - **Compression:** High-performance **Zstandard (zstd)** compression.
    - **Scenario:** Backs up sensitive credentials using encryption and compression, drops the credentials, and restores them securely.
 
+3. **[03_monitoring](./03_monitoring)**
+   - **Goal:** Demonstrates continuous monitoring of WAL-G base backups and PostgreSQL archiving status.
+   - **Telemetry:** Exposes custom metrics via a Python-based exporter daemon (port `9351`) and standard database stats via `postgres-exporter` (port `9187`).
+   - **Visualization:** Pre-configured Grafana dashboard (admin/admin credentials) monitoring backup sizes, elapsed times, count, and WAL archiving statistics.
+
+
 ---
 
 ## Prerequisites
