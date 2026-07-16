@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    container_name: walg-postgres-pitr
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: walg_test
+      # WAL-G S3 Configuration
+      WALG_S3_PREFIX: s3://walg-backups
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
+      AWS_ENDPOINT: http://minio:9000
+      AWS_S3_FORCE_PATH_STYLE: "true"
+      AWS_REGION: us-east-1
+      PGDATA: /var/lib/postgresql/data/pgdata
+      PGPASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./sql:/sql:ro
+    command: >
+      postgres
+      -c wal_level=replica
+      -c archive_mode=on
+      -c archive_command='wal-g wal-push "%p"'
+      -c archive_timeout=60
+    depends_on:
+      - minio
+
+  minio:
+    image: minio/minio
+    container_name: walg-minio-pitr
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
+  create-bucket:
+    image: minio/mc
+    container_name: walg-create-bucket-pitr
+    depends_on:
+      - minio
+    entrypoint: >
+      sh -c "
+      until mc alias set myminio http://minio:9000 minioadmin minioadmin; do echo 'Waiting for MinIO...'; sleep 1; done;
+      mc mb myminio/walg-backups || true;
+      exit 0;
+      "
+
+volumes:
+  pg_data:
+  minio_data:
