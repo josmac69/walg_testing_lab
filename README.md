@@ -68,3 +68,13 @@ make down
 ```
 
 For more details about each step and how WAL-G handles file transfers under the hood, check the respective lab subdirectories!
+
+---
+
+## Documentation & Runbooks
+
+Comprehensive guides and operational references are available in the **[docs](./docs)** directory:
+
+- **[Command & Configuration Cheat Sheet](./docs/cheat_sheet.md)**: A quick-reference guide covering core CLI commands, configuration options, compression, client-side encryption settings, and common troubleshooting steps.
+- **[Production Runbooks](./docs/production_runbooks.md)**: Step-by-step guides for installing and configuring WAL-G, scheduling daily base backups, monitoring archive status, performing full recoveries, executing Point-in-Time Recovery (PITR), setting up lifecycle retention pruning, and hardening backup security.
+- **[WAL-G Internals & Operations Report (PDF)](./docs/WAL-G_Internals__A_Deep_Technical_Report_for_PostgreSQL_Specialists.pdf)**: A deep-dive technical analysis of WAL-G's architecture, covering parallel block-level compression, background uploading daemons, delta-backup mechanisms, and cloud storage providers.
